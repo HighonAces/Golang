@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: testing-vault-app
+  labels:
+    app: testing-vault-app
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: testing-vault-app
+  template:
+    metadata:
+      name: testing-vault-app
+      labels:
+        app: testing-vault-app
+      annotations:
+        vault.hashicorp.com/agent-inject: 'true'
+        vault.hashicorp.com/role: 'testing-vault-app'
+        vault.hashicorp.com/my-secret: 'internal/config'
+    spec:
+      containers:
+        - name: testing-vault
+          image: crazyfreak1/latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+              protocol: TCP
+      serviceAccountName: testing-vault-app
+      
